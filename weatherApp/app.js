@@ -113,6 +113,5 @@ fetch(API_URL)
     aboutBtn.addEventListener("click", () => {
       renderAboutPage(mainEl);
     });
-
     window.onload(renderHomePage(mainEl, data));
   });
