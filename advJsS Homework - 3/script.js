@@ -27,7 +27,7 @@ class Academy {
   }
 
   printSubjects() {
-    this.subjects.forEach((subjects) => console.log(subjects));
+    this.subjects.forEach((subject) => console.log(subject));
   }
 }
 
@@ -38,6 +38,7 @@ class Subject {
     this.isElective = isElective;
     this.academy = academy;
     this.students = [];
+    academy.addingSubject(this.title);
   }
 
   overrideClasses(classes) {
@@ -68,6 +69,11 @@ class Student {
       return;
     }
 
+    if (!this.academy.subjects.includes(subject.title)) {
+      console.log("This subject isn't avalable");
+      return;
+    }
+
     if (this.currentSubject !== null)
       this.completedSubjects.push(this.currentSubject);
 
@@ -85,18 +91,6 @@ const emily = new Student("Emily", "Johnson", 23);
 const michael = new Student("Michael", "Brown", 18);
 const olivia = new Student("Olivia", "Davis", 19);
 
-emily.startAcademy(SEDC);
-michael.startAcademy(SEDC);
-olivia.startAcademy(SEDC);
-
-emily.startSubject(advJsSubject);
-michael.startSubject(advJsSubject);
-olivia.startSubject(advJsSubject);
-
-SEDC.printStudents();
-
-// RANDOM ACADEMY
-
 const randomAcadamy = new Academy("Random", "12.10.2022", "12.10.2023");
 
 const randomSubject = new Subject("idkSubject", true, randomAcadamy);
@@ -105,12 +99,30 @@ const sophia = new Student("Sophia", "Wilson", 29);
 const alexander = new Student("Alexander", "Smith", 17);
 const isabella = new Student("Isabella", "Taylor", 24);
 
+// STUDENTS STARTING ACADEMY
+emily.startAcademy(SEDC);
+michael.startAcademy(SEDC);
+olivia.startAcademy(SEDC);
+
+// STUDENTS STARTING SUBJECTS
+emily.startSubject(advJsSubject);
+michael.startSubject(advJsSubject);
+olivia.startSubject(advJsSubject);
+olivia.startSubject(randomSubject);
+
+// STUDENTS STARTING SUBJECTS
 sophia.startAcademy(randomAcadamy);
 alexander.startAcademy(randomAcadamy);
 isabella.startAcademy(randomAcadamy);
-
 sophia.startSubject(randomSubject);
 alexander.startSubject(randomSubject);
 isabella.startSubject(randomSubject);
+isabella.startSubject(advJsSubject);
 
+// PRINTING STUDENTS FROM ACADEMY
 randomAcadamy.printStudents();
+SEDC.printStudents();
+
+// PRINTING SUBJECTS FROM ACADEMY
+randomAcadamy.printSubjects();
+SEDC.printSubjects();
