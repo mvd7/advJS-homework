@@ -1,12 +1,14 @@
 console.log(`hi`);
 
-const API_URL =
+let API_URL =
   "https://api.openweathermap.org/data/3.0/onecall?lat=41.99646&lon=21.43141&units=metric&exclude=minutely&appid=83cf676a48739fd57b023a3d32f2ef8b";
 
 const homeBtn = document.querySelector(`.home-btn`);
 const aboutBtn = document.querySelector(`.about-btn`);
 const hourlyBtn = document.querySelector(`.hourly-btn`);
 const mainEl = document.querySelector(`main`);
+const searchInput = document.querySelector(`.search-input`);
+const searchBtn = document.querySelector(`.search-btn`);
 
 const createCardHomePage = (data) => {
   mainEl.innerHTML = "";
@@ -44,7 +46,8 @@ const createCardHomePage = (data) => {
 
 const createCardDailyData = (data) => {
   let dailyHTML = "";
-  for (let el of data.daily) {
+
+  data.daily.forEach((el) => {
     const dailyDate = new Date(el.dt * 1000);
 
     dailyHTML += `
@@ -59,7 +62,7 @@ const createCardDailyData = (data) => {
     <p class="max-temp">Min:${el.temp.max}°C</p>
     <p class="humidity">Humidity: ${el.humidity}%</p>
   </div> `;
-  }
+  });
 
   document.querySelector(".day-card-container").innerHTML = dailyHTML;
 };
@@ -85,7 +88,8 @@ const renderHourlyPage = (data) => {
   <div class="hourly-container"></div></div>
   `;
   let hourlyHTML = ``;
-  for (let el of data.hourly) {
+
+  data.hourly.forEach((el) => {
     const dailyDate = new Date(el.dt * 1000);
     hourlyHTML += `
     <div class="day-card">
@@ -101,12 +105,13 @@ const renderHourlyPage = (data) => {
           <p>${el.weather[0].description}</p>
         </div>
     `;
-  }
+  });
+
   document.querySelector(`.hourly-container`).innerHTML = hourlyHTML;
 };
 
-function fetchApiWeather() {
-  fetch(API_URL)
+function fetchApiWeather(api) {
+  fetch(api)
     .then((res) => res.json())
     .then((data) => {
       hourlyBtn.addEventListener("click", () => {
@@ -124,4 +129,20 @@ function fetchApiWeather() {
     });
 }
 
-fetchApiWeather();
+fetchApiWeather(API_URL);
+
+function searchApi() {
+  const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${searchInput.value}&limit=1&appid=83cf676a48739fd57b023a3d32f2ef8b`;
+
+  fetch(geoUrl)
+    .then((response) => response.json())
+    .then((data) => {
+      const { lat, lon } = data[0];
+
+      const weatherUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&exclude=minutely&appid=83cf676a48739fd57b023a3d32f2ef8b`;
+
+      fetchApiWeather(weatherUrl);
+    });
+}
+
+searchBtn.addEventListener(`click`, searchApi);
